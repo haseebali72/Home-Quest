@@ -6,12 +6,14 @@ import Offers from './pages/Offers'
 import Signin from './pages/Signin'
 import Signup from './pages/Signup'
 import ForgotPassword from './pages/ForgotPassword'
+import Header from './Components/Header'
 
 const App = () => {
   return (
     <>
+  <Header/>
       <Routes>
-        <Route path='/' element={<Home/>}/>
+        <Route  path='/' element={<Home/>}/>
         <Route path='/profile' element={<Profile/>}/>
         <Route path='/sign-in' element={<Signin/>}/>
         <Route path='/sign-up' element={<Signup/>}/>
