@@ -2,7 +2,11 @@ import React from 'react'
 
 const Signup = () => {
   return (
-    <div>Signup</div>
+    <>
+    <section>
+      <h1 className='text-3xl '></h1>
+    </section>
+    </>
   )
 }
 
