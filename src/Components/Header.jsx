@@ -14,7 +14,7 @@ const Header = () => {
     ]
   return (
    <>
-   <div className='border-b shadow-xl top-0 sticky z-50 '>
+   <div className='border-b shadow-xl top-0 sticky z-50 bg-white'>
    <header className='flex justify-between items-center px-3 max-w-6xl mx-auto'>
         <div className=''>
             <img 

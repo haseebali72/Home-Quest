@@ -5,7 +5,11 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      screens : {
+        'custom-range' :  {'min' : '600px', "max" : "800px"}
+      }
+    },
   },
   plugins: [
     require('@tailwindcss/forms'),
