@@ -1,19 +1,47 @@
 import React, { useState } from 'react'
 import Logo from "/Logo.png"
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import OAuth from '../Components/OAuth'
 import { useForm } from 'react-hook-form'
 import { AiFillExclamationCircle } from "react-icons/ai";
 import { DevTool } from '@hookform/devtools'
+import { signup } from '../firebase/auth.firebase'
+import { toast } from 'react-toastify'
+import Loader from '../Components/Loader'
+
 
 const Signup = () => {
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
   const form = useForm()
-  const { register, handleSubmit, control, formState:{errors} } = form
+  const { register, handleSubmit, control, formState: { errors } } = form
 
   // Form Submission
 
-  const hs = () => {
-    alert("FOtm submit ")
+  const hs = async (data) => {
+    setLoading(true)
+    const response = await signup(data)
+    if (response.errorCatched) {
+      setLoading(false)
+      toast.error(response.errorCatched)
+    }
+
+    if(response.userExistMeggage){
+      setLoading(false)
+      toast.error(response.userExistMeggage)
+    }
+
+    if (response.undefinedErrrorMessage) {
+      setLoading(false)
+      toast.error(response.errorMessage)
+    }
+ 
+    if (response.successMessage) {
+      setLoading(false)
+      toast.success(response.successMessage)
+      navigate("/sign-in")
+    }
+
   }
 
   return (
@@ -28,7 +56,7 @@ const Signup = () => {
             />
           </div>
 
-          <div className=' w-full md:w-[90%]  lg:w-[40%]'>
+          {loading ? <Loader para="Signing Up......" /> : <div className=' w-full md:w-[90%]  lg:w-[40%]'>
             <form className='my-2' onSubmit={handleSubmit(hs)}>
               
               <div className='flex flex-wrap'>
@@ -77,7 +105,6 @@ const Signup = () => {
                       value: true,
                       message: "Password required"
                     },
-                    pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
 
                   })}
                 />
@@ -96,8 +123,6 @@ const Signup = () => {
                       value: true,
                       message: "Passoord Required"
                     },
-                    pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
-
                   })}
                 />
                 <button className={errors?.name?.message ? "" : "hidden"}>
@@ -128,9 +153,10 @@ const Signup = () => {
             <span className='text-center block my-2'>OR</span>
 
             <OAuth />
-          </div>
+          </div>}
+
         </div>
-        <DevTool control={control}/>
+        <DevTool control={control} />
 
       </section>
     </>

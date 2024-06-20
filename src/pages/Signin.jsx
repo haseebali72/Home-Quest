@@ -1,19 +1,43 @@
 import React, { useState } from 'react'
 import Logo from "/Logo.png"
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import OAuth from '../Components/OAuth'
 import { useForm } from 'react-hook-form'
 import { DevTool } from "@hookform/devtools";
-
-
+import { signin } from '../firebase/auth.firebase'
+import { toast } from 'react-toastify'
+import Loader from "../Components/Loader"
+ 
 
 const Signin = () => {
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
   const form = useForm()
-  const { register, handleSubmit, control, formState : {errors} } = form
+  const { register, handleSubmit, control, formState: { errors } } = form
 
-  // Fomr Sbmission
+  // Fomr Submission
 
-  const hs = () => { }
+  const hs = async (data) => {
+      setLoading(true)
+      const response = await signin(data)
+      if(response?.signInSuccess){
+        setLoading(false)
+        toast.success("Signed In Successfully")
+        navigate("/home")
+        localStorage.setItem("isLoggedIn", true)
+        return
+      }
+      
+      if(response?.invalidCredentialsMessage){
+        setLoading(false)
+        toast.error("Invalid User Credentials")
+        return
+      }
+      if(response.ErrorinCatch){
+        setLoading(false)
+        toast.error(response.ErrorinCatch)
+      }
+   }
 
   return (
     <>
@@ -27,50 +51,55 @@ const Signin = () => {
             />
           </div>
 
-          <div className= 'w-full sm:w-[30%] sm:ml-2 md:w-[70%] custom-range:w-[67%] lg:w-[40%] lg:ml-5'>
-            <form className='my-2' onSubmit={handleSubmit(hs)}>
-              <div>
-                <input
-                  className={errors.email?.message ? 'border-red-600 border-2 w-full px-4 py-2 mb-2 text-xl text-gray-700 bg-whit rounded transition ease-in-out' : 'w-full px-4 py-2 mb-6 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out'}
-                  type='email'
-                  placeholder='Enter you Email'
-                  {...register("email", {
-                    required: {
-                      value: true,
-                      message: "Email Required"
-                    }
-                  })}
-                />
+          <div className='w-full sm:w-[30%] sm:ml-2 md:w-[70%] custom-range:w-[67%] lg:w-[40%] lg:ml-5'>
+            {loading ? <Loader para="Signing In......." /> :
+              <>
+                <form className='my-2' onSubmit={handleSubmit(hs)}>
+                  <div>
+                    <input
+                      className={errors.email?.message ? 'border-red-600 border-2 w-full px-4 py-2 mb-2 text-xl text-gray-700 bg-whit rounded transition ease-in-out' : 'w-full px-4 py-2 mb-6 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out'}
+                      type='email'
+                      placeholder='Enter you Email'
+                      {...register("email", {
+                        required: {
+                          value: true,
+                          message: "Email Required"
+                        }
+                      })}
+                    />
 
-              </div>
-              <div>
-                <input
-                  className={errors.password?.message ? 'border-red-600 border-2 w-full px-4 py-2 mb-2 text-xl text-gray-700 bg-whit rounded transition ease-in-out' : 'w-full px-4 py-2 mb-6 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out'}
-                  type='password'
-                  placeholder='Enter your Password'
-                  {...register("password", {
-                    required: {
-                      value: true,
-                      message: "Password Required"
-                    }
-                  })}
-                />
-              </div>
+                  </div>
+                  <div>
+                    <input
+                      className={errors.password?.message ? 'border-red-600 border-2 w-full px-4 py-2 mb-2 text-xl text-gray-700 bg-whit rounded transition ease-in-out' : 'w-full px-4 py-2 mb-6 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out'}
+                      type='password'
+                      placeholder='Enter your Password'
+                      {...register("password", {
+                        required: {
+                          value: true,
+                          message: "Password Required"
+                        }
+                      })}
+                    />
+                  </div>
 
-              <div className='flex my-3 mx-0 bg-white justify-between whitespace-nowrap items-center text-sm sm:text-lg'>
-                <p className=''>Don't have account?
-                  <NavLink className="text-red-500 ml-1 hover:text-red-600 transition duration-200 ease-in-out" to="/sign-up">Register</NavLink>
-                </p>
-                <p>
-                  <NavLink className="text-blue-400 ml-1 hover:text-blue-600 transition duration-200 ease-in-out" to="/forgot-password">Forgot Password?</NavLink>
-                </p>
-              </div>
+                  <div className='flex my-3 mx-0 bg-white justify-between whitespace-nowrap items-center text-sm sm:text-lg'>
+                    <p className=''>Don't have account?
+                      <NavLink className="text-red-500 ml-1 hover:text-red-600 transition duration-200 ease-in-out" to="/sign-up">Register</NavLink>
+                    </p>
+                    <p>
+                      <NavLink className="text-blue-400 ml-1 hover:text-blue-600 transition duration-200 ease-in-out" to="/forgot-password">Forgot Password?</NavLink>
+                    </p>
+                  </div>
 
-              <input type='submit' className='w-full bg-blue-600 text-white px-7 py-3 text-sm font-medium uppercase rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out hover-shadow-lg active:bg-blue-800'/>
-            </form>
+                  <input type='submit' className='w-full bg-blue-600 text-white px-7 py-3 text-sm font-medium uppercase rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out hover-shadow-lg active:bg-blue-800' />
+                </form>
 
-            <span className='text-center block my-2'>OR</span>
-            <OAuth />
+                <span className='text-center block my-2'>OR</span>
+                <OAuth />
+              </>
+            }
+
           </div>
         </div>
 
