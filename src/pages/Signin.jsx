@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 import { DevTool } from "@hookform/devtools";
 import { signin } from '../firebase/auth.firebase'
 import { toast } from 'react-toastify'
-import Loader from "../Components/Loader"
+import {ColorCircleLoader} from "../Components/Loader"
  
 
 const Signin = () => {
@@ -44,7 +44,7 @@ const Signin = () => {
       <section>
         <h1 className='text-3xl text-center mt-6 font-bold'> Signin</h1>
         <div className='flex flex-wrap justify-center items-center px-6 py-122 max-w-6xl mx-auto md:items-center'>
-          <div className='md:w-[67%] lg:w-[50%] mb-12 md:mb-6 flex items-center justify-center'>
+          <div className='min-w-96 min-h-96 md:w-[67%] lg:w-[50%] mb-12 md:mb-6 flex items-center justify-center'>
             <img
               src={Logo}
               className='h-60 w-60'
@@ -52,7 +52,7 @@ const Signin = () => {
           </div>
 
           <div className='w-full sm:w-[30%] sm:ml-2 md:w-[70%] custom-range:w-[67%] lg:w-[40%] lg:ml-5'>
-            {loading ? <Loader para="Signing In......." /> :
+            {loading ? <ColorCircleLoader/>:
               <>
                 <form className='my-2' onSubmit={handleSubmit(hs)}>
                   <div>
