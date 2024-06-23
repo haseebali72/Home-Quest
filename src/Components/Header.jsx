@@ -5,8 +5,8 @@ import { useLocation } from 'react-router-dom'
 
 
 const Header = () => {
-    const location = useLocation()
-    console.log(location)
+    // const location = useLocation()
+    // console.log(location)
     const headerList = [
         { name: "Home", path: "/home", id: 1 },
         { name: "Offers", path: "/offers", id: 2 },

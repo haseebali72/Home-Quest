@@ -4,16 +4,27 @@ import { NavLink } from 'react-router-dom'
 import OAuth from '../Components/OAuth'
 import { useForm } from 'react-hook-form'
 import { DevTool } from "@hookform/devtools";
+import { resetPassword } from '../firebase/auth.firebase'
+import { toast } from 'react-toastify'
 
 
 
 const ForgotPassword = () => {
   const form = useForm()
-  const { register, handleSubmit, control, formState : {errors} } = form
+  const { register, handleSubmit, control, formState: { errors } } = form
 
   // Fomr Sbmission
 
-  const hs = () => { }
+  const hs = async (data, event) => {
+      const response = await resetPassword(data)
+      if(response.passwordResetlink){
+        toast.success(response.passwordResetlink)
+      }
+
+      if(response.userNotExist){
+        toast.error(response.userNotExist)
+      }
+   }
 
   return (
     <>
@@ -27,7 +38,7 @@ const ForgotPassword = () => {
             />
           </div>
 
-          <div className= 'w-full sm:w-[30%] sm:ml-2 md:w-[70%] custom-range:w-[67%] lg:w-[40%] lg:ml-5'>
+          <div className='w-full sm:w-[30%] sm:ml-2 md:w-[70%] custom-range:w-[67%] lg:w-[40%] lg:ml-5'>
             <form className='my-2' onSubmit={handleSubmit(hs)}>
               <div>
                 <input
@@ -41,9 +52,8 @@ const ForgotPassword = () => {
                     }
                   })}
                 />
-
               </div>
-              
+
 
               <div className='flex my-3 mx-0 bg-white justify-between whitespace-nowrap items-center text-sm sm:text-lg'>
                 <p className=''>Don't have account?
@@ -53,11 +63,17 @@ const ForgotPassword = () => {
                   <NavLink className="text-blue-400 ml-1 hover:text-blue-600 transition duration-200 ease-in-out" to="/sign-in">Sign in Instead</NavLink>
                 </p>
               </div>
+            <input type='submit' className='w-full bg-blue-600 text-white px-7 py-3 text-sm font-medium uppercase rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out hover-shadow-lg active:bg-blue-800'/>
             </form>
-            <button className='w-full bg-blue-600 text-white px-7 py-3 text-sm font-medium uppercase rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out hover-shadow-lg active:bg-blue-800'>Send Reset Password</button>
+            
+            
+            
             <span className='text-center block my-2'>OR</span>
+            
             <OAuth />
+          
           </div>
+        
         </div>
 
         <DevTool control={control} />

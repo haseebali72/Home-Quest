@@ -1,5 +1,5 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth"
-import { auth, db } from "./firebase"
+import { GoogleAuthProvider, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, updateProfile } from "firebase/auth"
+import { auth, db, googleAuthProvider } from "./firebase"
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore"
 
 const signup = async (data) => {
@@ -24,7 +24,7 @@ const signup = async (data) => {
                 mobilenumber: data.mobile_number,
                 timestamp: serverTimestamp(),
             }
-            // console.log(userDoc)
+            console.log(userDoc)
             await setDoc(doc(db, "users", `${data.email}`), userDoc)
             return { successMessage: "User Created Successfully" }
         }
@@ -67,4 +67,54 @@ const signin = async (data) => {
     }
 }
 
-export { signup, signin }
+const googleAuth =async ()=>{
+    try {
+        const result = await signInWithPopup(auth, googleAuthProvider)
+        const credential = GoogleAuthProvider.credentialFromResult(result)
+        const token = credential?.accessToken
+        const user = result.user
+        console.log(user)
+        const docRef = doc(db, "users", user.email)
+        const docSnap = await getDoc(docRef)
+        console.log(docSnap.exists())
+        if(!docSnap.exists()){
+            const userDoc = {
+                name : user.displayName,
+                email : user.email,
+                uid : user.uid,
+                timestamp : serverTimestamp()
+            }
+            // console.log(userDoc)
+            await setDoc(doc(db, "users", `${user.email}`), userDoc)      
+        }
+        return {
+            googleAuthSuccess : "Successfully Signed In"
+        }
+        
+        } catch (error) {
+        return {
+            errorinCatch : error.message
+        }
+    }
+}
+
+
+const resetPassword = async (data)=>{
+    try {
+        const docRef = doc(db, "users", data.email)
+        const docSnap = await getDoc(docRef)
+        if(!docSnap.exists()){
+            return {userNotExist : "User doesnot exists"}
+        }
+        await  sendPasswordResetEmail(auth, data.email)
+        return {
+            passwordResetlink : "Password reset link send"
+        }
+    } catch (error) {
+        return {
+            errorinCatch : error.message
+        }
+    }
+}
+
+export { signup, signin, googleAuth,resetPassword }
