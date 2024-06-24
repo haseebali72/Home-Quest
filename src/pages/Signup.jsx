@@ -68,9 +68,7 @@ const Signup = () => {
                       required: {
                         value: true,
                         message: "Name Required"
-                      },
-                      maxLength: 20,
-                      minLength: 3
+                      }
                     })}
                   />
                   <button className={errors?.name?.message ? "" : "hidden"}>
