@@ -1,16 +1,26 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Logo from "/Logo.png"
 import { NavLink } from 'react-router-dom'
-import { useLocation } from 'react-router-dom'
-
-
+import { onAuthStateChanged } from "firebase/auth"
+import { auth } from "../firebase/firebase"
 const Header = () => {
-    // const location = useLocation()
-    // console.log(location)
+    const [isAuthenticated, setisAuthenticated] = useState(false)
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setisAuthenticated(true)
+            } else {
+                setisAuthenticated(false)
+            }
+        })
+    }, [])
+    
     const headerList = [
         { name: "Home", path: "/home", id: 1 },
         { name: "Offers", path: "/offers", id: 2 },
-        { name: "Sign In", path: "/sign-in", id: 3 },
+        isAuthenticated ?
+            { name: "Profile", path: "/profile", id: 4 } :
+            { name: "Sign In", path: "/sign-in", id: 3 },
     ]
     return (
         <>
