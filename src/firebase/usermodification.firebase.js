@@ -1,6 +1,6 @@
 import { updateProfile } from "firebase/auth"
 import { auth, db } from "./firebase"
-import { doc, getDoc, updateDoc } from "firebase/firestore"
+import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore"
 
 const updateName = async (data) => {
     try {
@@ -25,4 +25,15 @@ const updateName = async (data) => {
     }
 }
 
-export { updateName }
+const addListing = async (data)=>{
+    try {
+        const docRef = await addDoc(collection(db, "listings"), data)
+        console.log(docRef)
+        return {docListed : "Listing Created"}
+    } catch (error) {
+        return {errorinCatch : `Error in catch ${error.message}`
+        }
+    }
+}
+
+export { updateName, addListing }

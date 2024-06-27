@@ -5,7 +5,7 @@ import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore"
 const signup = async (data) => {
     try {
         const newUser = await createUserWithEmailAndPassword(auth, data.email, data.password)
-
+        console.log(newUser)
         if (newUser === undefined) {
             return { undefinedErrrorMessage: "unable to create new User" }
         }
@@ -13,8 +13,9 @@ const signup = async (data) => {
         if (newUser) {
             updateProfile(auth.currentUser, {
                 displayName: data.name,
+                phoneNumber : data.mobile_number
             })
-            console.log(newUser)
+            // console.log(newUser)
 
             // The above method is also to update/add the user but it will not add it to firestore or the storage bucket.
             const userDoc = {
@@ -24,12 +25,10 @@ const signup = async (data) => {
                 mobilenumber: data.mobile_number,
                 timestamp: serverTimestamp(),
             }
-            console.log(userDoc)
+            // console.log(userDoc)
             await setDoc(doc(db, "users", `${data.email}`), userDoc)
             return { successMessage: "User Created Successfully" }
         }
-
-
     } catch (error) {
         if (error.code == "auth/email-already-in-use") {
             return { userExistMeggage: "This user already exists" }
@@ -67,7 +66,7 @@ const signin = async (data) => {
     }
 }
 
-const googleAuth =async ()=>{
+const googleAuth = async () => {
     try {
         const result = await signInWithPopup(auth, googleAuthProvider)
         const credential = GoogleAuthProvider.credentialFromResult(result)
@@ -77,44 +76,44 @@ const googleAuth =async ()=>{
         const docRef = doc(db, "users", user.email)
         const docSnap = await getDoc(docRef)
         console.log(docSnap.exists())
-        if(!docSnap.exists()){
+        if (!docSnap.exists()) {
             const userDoc = {
-                name : user.displayName,
-                email : user.email,
-                uid : user.uid,
-                timestamp : serverTimestamp()
+                name: user.displayName,
+                email: user.email,
+                uid: user.uid,
+                timestamp: serverTimestamp()
             }
             // console.log(userDoc)
-            await setDoc(doc(db, "users", `${user.email}`), userDoc)      
+            await setDoc(doc(db, "users", `${user.email}`), userDoc)
         }
         return {
-            googleAuthSuccess : "Successfully Signed In"
+            googleAuthSuccess: "Successfully Signed In"
         }
-        
-        } catch (error) {
+
+    } catch (error) {
         return {
-            errorinCatch : error.message
+            errorinCatch: error.message
         }
     }
 }
 
 
-const resetPassword = async (data)=>{
+const resetPassword = async (data) => {
     try {
         const docRef = doc(db, "users", data.email)
         const docSnap = await getDoc(docRef)
-        if(!docSnap.exists()){
-            return {userNotExist : "User doesnot exists"}
+        if (!docSnap.exists()) {
+            return { userNotExist: "User doesnot exists" }
         }
-        await  sendPasswordResetEmail(auth, data.email)
+        await sendPasswordResetEmail(auth, data.email)
         return {
-            passwordResetlink : "Password reset link send"
+            passwordResetlink: "Password reset link send"
         }
     } catch (error) {
         return {
-            errorinCatch : error.message
+            errorinCatch: error.message
         }
     }
 }
 
-export { signup, signin, googleAuth,resetPassword }
+export { signup, signin, googleAuth, resetPassword }

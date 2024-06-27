@@ -23,7 +23,8 @@
     "react-loader-spinner": "^6.1.6",
     "react-router": "^6.23.1",
     "react-router-dom": "^6.23.1",
-    "react-toastify": "^10.0.5"
+    "react-toastify": "^10.0.5",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@hookform/devtools": "^4.3.1",
