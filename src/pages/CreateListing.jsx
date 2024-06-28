@@ -2,12 +2,12 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 // import { DevTool } from '@hookform/devtools'
 import { storeImages } from '../firebase/fileUploads.firebase'
-import { ColorCircleLoader } from '../Components/Loader'
+import { ColorCircleLoaderFull } from '../Components/Loader'
 import { toast } from 'react-toastify'
 import { addListing } from '../firebase/usermodification.firebase'
 import { useNavigate } from 'react-router'
-import { doc, getDoc } from 'firebase/firestore'
-import { db } from '../firebase/firebase'
+import { doc, getDoc, serverTimestamp } from 'firebase/firestore'
+import { auth, db } from '../firebase/firebase'
 
 const CreateListing = () => {
 
@@ -27,7 +27,11 @@ const CreateListing = () => {
             })
         console.log(imageURLs)
         data.imageURLs = imageURLs
+        data.timestamp = serverTimestamp()
+        data.userRef = auth.currentUser.uid
         delete data.images
+
+        console.log(data)
         
         const listingDoc = await addListing(data)
         if(listingDoc.docListed){
@@ -44,7 +48,7 @@ const CreateListing = () => {
         }
     }
     return (
-        loading ? <ColorCircleLoader /> :
+        loading ? <ColorCircleLoaderFull /> :
             <>
                 <main className='max-w-md px-2 mx-auto'>
                     <h1 className='text-3xl text-center mt-6 font-bold'>
