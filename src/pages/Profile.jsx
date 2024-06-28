@@ -14,6 +14,7 @@ const Profile = () => {
   const inputRef = useRef(null)
   const [isDisabled, setIsDisabled] = useState(true)
   const [loading, setLoading] = useState(false)
+  const [listLoading, setListLoading] = useState(true)
   const [listings, setListings] = useState([])
   const navigate = useNavigate()
   const form = useForm({
@@ -62,7 +63,7 @@ const Profile = () => {
   useEffect(() => {
 
     async function fetchUserListings() {
-      setLoading(true)
+      setListLoading(true)
       const listingRef = collection(db, "listings")
       const q = query(listingRef, where("userRef", "==", auth.currentUser.uid),
         orderBy("timestamp", "desc"))
@@ -77,7 +78,7 @@ const Profile = () => {
       })
       // console.log(listings)
       setListings(listings)
-      setLoading(false)
+      setListLoading(false)
       console.log(listings)
     }
     fetchUserListings()
@@ -125,10 +126,11 @@ const Profile = () => {
           </section>
       }
       <div className='max-w-6xl px-3 mt-6 mx-auto'>
-        { 
-          !loading && listings.length > 0 && (
+        <h1 className='text-2xl text-center text-red-900 font-semibold'>My Listings</h1>
+
+        { listLoading ? <ColorCircleLoader/> :
+          listings.length > 0 && (
             <>
-              <h1 className='text-2xl text-center text-red-900 font-semibold'>My Listings</h1>
               <ul>
                 {listings.map((listing) => (
                   <ListingItem key={listing.id} id={listing.id} listing={listing.data} />
