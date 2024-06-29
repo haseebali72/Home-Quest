@@ -126,12 +126,12 @@ const Profile = () => {
           </section>
       }
       <div className='max-w-6xl px-3 mt-6 mx-auto'>
-        <h1 className='text-2xl text-center text-red-900 font-semibold'>My Listings</h1>
+        <h1 className='text-2xl text-center text-red-900 font-semibold m-2'>My Listings</h1>
 
         { listLoading ? <ColorCircleLoader/> :
           listings.length > 0 && (
             <>
-              <ul>
+              <ul className='sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 mt-6 mb-6 '>
                 {listings.map((listing) => (
                   <ListingItem key={listing.id} id={listing.id} listing={listing.data} />
                 ))}
