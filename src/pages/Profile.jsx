@@ -7,7 +7,8 @@ import { updateName } from '../firebase/usermodification.firebase'
 import { ColorCircleLoader } from "../Components/Loader"
 import { NavLink } from 'react-router-dom'
 import { FcHome } from "react-icons/fc";
-import { collection, getDocs, orderBy, query, where } from 'firebase/firestore'
+import { collection, deleteDoc, doc, getDocs, orderBy, query, where } from 'firebase/firestore'
+import { MdCancel } from "react-icons/md";
 import ListingItem from './ListingItem'
 
 const Profile = () => {
@@ -58,6 +59,11 @@ const Profile = () => {
     navigate("/home")
     toast.success("Signed Out")
   }
+
+  // This fucntion handles the cancel button when changing name
+  const onResetEditHandler=()=>{
+      setIsDisabled(true)
+  }
   console.log(auth.currentUser.uid)
 
   useEffect(() => {
@@ -84,6 +90,19 @@ const Profile = () => {
     fetchUserListings()
   }, [])
 
+  const onDelete =async (listingID)=>{
+      if(confirm("Are you sure you want to delete it?")){
+        await deleteDoc(doc(db, "lisitngs", listingID))
+        //The above method doesnot delete the doc dirrectly. To delete an entire collection or subcollection in Cloud Firestore, retrieve (read) all the documents within the collection or subcollection and delete them. This process incurs both read and delete costs. 
+        const updatedListings =listings.filter(listing => listing.id !== listingID  ) 
+        setListings(updatedListings)
+        toast.success("Succefully deleted the listing")
+      }
+  }
+
+  const onEdit = (listingID)=>{
+      navigate(`/edit-listing/${listingID}`)    
+  }
   return (
     <>
       {
@@ -109,7 +128,10 @@ const Profile = () => {
                   {isDisabled ?
                     <button className="text-red-500 ml-1 hover:text-red-600 transition duration-200 ease-in-out" onClick={editHandler}>Edit</button>
                     :
-                    <button className="text-red-500 ml-1 text-sm hover:text-red-600 transition duration-200 ease-in-out" onClick={changeHandler}>Apply Changes</button>
+                    <>                    
+                    <button className="text-red-500 ml-1 text-sm hover:text-red-600 transition duration-200 ease-in-out mr-1" onClick={changeHandler}>Apply Changes</button> 
+                    <button className="align-middle" onClick={onResetEditHandler}><MdCancel /></button>
+                    </>
                   }
                 </p>
                 <p>
@@ -133,7 +155,13 @@ const Profile = () => {
             <>
               <ul className='sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 mt-6 mb-6 '>
                 {listings.map((listing) => (
-                  <ListingItem key={listing.id} id={listing.id} listing={listing.data} />
+                  <ListingItem 
+                    onDelete={()=>onDelete(listing.id)} 
+                    onEdit = {()=>onEdit(listing.id)}
+                    key={listing.id} 
+                    id={listing.id} 
+                    listing={listing.data} 
+                  />
                 ))}
               </ul>
             </>
