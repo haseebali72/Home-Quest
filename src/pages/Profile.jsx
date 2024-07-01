@@ -140,7 +140,7 @@ const Profile = () => {
               </div>
 
               <div className='flex justify-center items-center w-4/5 mx-auto my-4'>
-                <NavLink to="/profile/create-listing" className="flex bg-blue-600 shadow-2xl uppercase text-lg w-4/5 text-center rounded-md p-2 text-white  hover:bg-blue-700 active:scale-95">
+                <NavLink to="/create-listing" className="flex bg-blue-600 shadow-2xl uppercase text-lg w-4/5 text-center rounded-md p-2 text-white  hover:bg-blue-700 active:scale-95">
                   <FcHome className='text-3xl mx-5 bg-red-200 rounded-full' /> Sell or Rent your Home
                 </NavLink>
               </div>
@@ -154,7 +154,7 @@ const Profile = () => {
           listings.length > 0 && (
             <>
               <ul className='sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 mt-6 mb-6 '>
-                {listings.map((listing) => (
+                {listings.length > 0 ? listings.map((listing) => (
                   <ListingItem 
                     onDelete={()=>onDelete(listing.id)} 
                     onEdit = {()=>onEdit(listing.id)}
@@ -162,7 +162,7 @@ const Profile = () => {
                     id={listing.id} 
                     listing={listing.data} 
                   />
-                ))}
+                )): <h1>No Listing Created</h1>}
               </ul>
             </>
           )
