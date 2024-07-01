@@ -1,19 +1,37 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 // import { DevTool } from '@hookform/devtools'
 import { storeImages } from '../firebase/fileUploads.firebase'
 import { ColorCircleLoaderFull } from '../Components/Loader'
 import { toast } from 'react-toastify'
-import { addListing } from '../firebase/usermodification.firebase'
-import { useNavigate } from 'react-router'
+import { addListing, updateListing } from '../firebase/usermodification.firebase'
+import { useNavigate, useParams } from 'react-router'
 import { doc, getDoc, serverTimestamp } from 'firebase/firestore'
 import { auth, db } from '../firebase/firebase'
+import { DevTool } from '@hookform/devtools'
 
-const CreateListing = () => {
-
+const EditListing = () => {
     const [loading, setLoading] = useState(false)
+    const [listing, setListing] = useState(null)
     const navigate = useNavigate()
-    const form = useForm()
+    const params = useParams()
+    
+    const form = useForm({
+        defaultValues : {
+            category : listing?.category || "not found",
+            name : listing?.name || "not found",
+            beds : listing?.beds || "not found",
+            bath : listing?.bath || "not found" ,
+            description : listing?.description || "not found",
+            furnished : listing?.furnished || "not found",
+            curreny : listing?.currency || "not found",
+            imageURLs :listing?.imageURLs|| "not found",
+            offer :listing?.offer || "not found",
+            parking : listing?.parking || "not found",
+            price : listing?.price || "not found",
+            address : listing?.address || "not found"
+        }
+    })
     const { register, handleSubmit, control, reset } = form
 
     const formSubmission = async (data) => {
@@ -33,13 +51,13 @@ const CreateListing = () => {
 
         console.log(data)
         
-        const listingDoc = await addListing(data)
-        if(listingDoc.docListed){
+        const listingDoc = await updateListing(data, params.listingId)
+        if(listingDoc.docUpdated){
             setLoading(false)
-            toast.success("Lisitng Created")
+            toast.success("Lisitng updated")
             navigate(`/category/${data.category}/${listingDoc.docRef.id}`)
             reset()
-            return 
+            return  
         }
         if(listingDoc.errorinCatch){
             setLoading(false)
@@ -47,12 +65,40 @@ const CreateListing = () => {
             return
         }
     }
+   
+
+    useEffect(()=>{
+        setLoading(true)
+        const fetchListing = async()=>{
+            const docRef = doc(db,"listings", params.listingId)
+            const docSnap = await getDoc(docRef)
+            const document = docSnap.data()
+            // console.log(document)
+            if(docSnap.exists()){
+                setListing(document)
+                reset(document)
+                setLoading(false)
+            }else{
+                navigate("/")
+                toast.error("Listing doesnot Exists")
+            }
+        }
+        fetchListing()
+    },[params.listingId, navigate])
+    // console.log(listing)
+    useEffect(()=>{
+        if(listing && listing.userRef !== auth.currentUser.uid ){
+            toast.error("This link is expired")
+            navigate("profile")
+        }
+    })
+    
     return (
-        loading ? <ColorCircleLoaderFull /> :
+        loading ? <ColorCircleLoaderFull /> : listing ?
             <>
                 <main className='max-w-md px-2 mx-auto'>
                     <h1 className='text-3xl text-center mt-6 font-bold'>
-                        Create a Listing
+                        Edit your Lisitng
                     </h1>
                     <form onSubmit={handleSubmit(formSubmission)} id='listing_form'>
 
@@ -200,14 +246,14 @@ const CreateListing = () => {
                             })} />
                         </div>
 
-                        <input type='submit' className='my-6 w-full px-7 py-3 bg-blue-600 text-white text-sm font-medium uppercase rounded-none shadow-md hover:bg-blue-700 active:scale-95 ' />
+                        <input value="Edit Listing" type='submit' className='my-6 w-full px-7 py-3 bg-blue-600 text-white text-sm font-medium uppercase rounded-none shadow-md hover:bg-blue-700 active:scale-95 ' />
 
                     </form>
-                    {/* <DevTool control={control}/> */}
+                    <DevTool control={control}/>
                 </main>
-            </>
+            </> : <h1>List not loading</h1>
 
     )
 }
 
-export default CreateListing
+export default EditListing

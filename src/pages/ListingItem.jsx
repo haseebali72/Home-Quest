@@ -39,18 +39,23 @@ const ListingItem = ({ listing, id, onDelete, onEdit }) => {
              </div>
           </div>
         </NavLink>
+        <div className='inline-flex cursor '>
         {onDelete && (
           <FaTrash
-            className='bottom-2 right-2 h-[14px] cursor-pointer text-red-500 '
+            // className='h-[14px] bottom absolute cursor-pointer text-red-500 '
+            className='mr-1 cursor-pointer'
             onClick={()=>onDelete(listing.id)}
           />
         )}
         {onEdit && (
           <MdEdit
-            className='bottom-2 right-7 h-4 cursor-pointer text-black'
+            // className='bottom-2 absolute right-7 h-4 cursor-pointer text-black'
+            className='cursor-pointer'
             onClick={()=>onEdit(listing.id)}
           />
         )}
+        </div>
+       
       </li>
     </>
   )

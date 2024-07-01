@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Logo from "/Logo.png"
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import OAuth from '../Components/OAuth'
 import { useForm } from 'react-hook-form'
 import { DevTool } from "@hookform/devtools";
@@ -10,6 +10,7 @@ import { toast } from 'react-toastify'
 
 
 const ForgotPassword = () => {
+  const navigate = useNavigate()
   const form = useForm()
   const { register, handleSubmit, control, formState: { errors } } = form
 
@@ -19,6 +20,7 @@ const ForgotPassword = () => {
       const response = await resetPassword(data)
       if(response.passwordResetlink){
         toast.success(response.passwordResetlink)
+        navigate("/sign-in")
       }
 
       if(response.userNotExist){

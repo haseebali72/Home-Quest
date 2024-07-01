@@ -196,7 +196,7 @@ const CreateListing = () => {
                                     value: true,
                                     message: "Images Required"
                                 },
-                                validate: (value) => value.length <= 6 || "Maximum 6 images allowed"
+                                // validate: (value) => value.length > 6 || "Maximum 6 images allowed"
                             })} />
                         </div>
 

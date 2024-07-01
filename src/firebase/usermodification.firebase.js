@@ -36,4 +36,15 @@ const addListing = async (data)=>{
     }
 }
 
-export { updateName, addListing }
+const updateListing = async (data, listingID)=>{
+    try {
+        const docRef = doc(db, "listings", listingID)
+        await updateDoc(docRef, data)
+        return {docUpdated : "Listing Updated", docRef : docRef}
+    } catch (error) {
+        return {errorinCatch : `Error in catch ${error.message}`
+        }
+    }
+}
+
+export { updateName, addListing, updateListing }
