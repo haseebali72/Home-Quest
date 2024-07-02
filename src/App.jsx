@@ -11,6 +11,7 @@ import PrivateRoute from './Components/PrivateRoute'
 import CreateListing from './pages/CreateListing'
 import ErrorPage from './pages/ErrorPage'
 import EditListing from './pages/EditListing'
+import Listing from './pages/Listing'
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
         <Route path='/sign-up' element={<Signup />} />
         <Route path='/forgot-password' element={<ForgotPassword />} />
         <Route path='/offers' element={<Offers />} />
+        <Route path='/category/:x/:listingId' element={<Listing/>} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
 
