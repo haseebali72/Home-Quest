@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 import { MdLocationOn } from "react-icons/md";
 import {FaTrash} from "react-icons/fa"
 import { MdEdit } from 'react-icons/md';
-
+import { priceConverter } from '../utils/priceConverter';
 
 const ListingItem = ({ listing, id, onDelete, onEdit }) => {
   const timestamp = new Date(listing.timestamp.seconds * 1000);
@@ -21,7 +21,7 @@ const ListingItem = ({ listing, id, onDelete, onEdit }) => {
             </div>
             <p className='font-semibold m-0 text-xl  '>{listing.name}</p>
             <p className='text-[#457b9d] mt-2 font-semibold '>
-              {`${listing.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ${listing.currency}`}
+              {`${priceConverter(listing.price)} ${listing.currency}`}
               {listing.category == "rent"? "/month" : null}
              </p>
              <div className='flex  items-center mt-[10px] space-x-3 '>
