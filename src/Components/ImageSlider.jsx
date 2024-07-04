@@ -12,8 +12,8 @@ export default function ImageSlider ({imageURLs}){
   return (
     <Swiper
       modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
-      spaceBetween={10}
-      slidesPerView={1}
+      spaceBetween={2}
+      slidesPerView={2}
       navigation={{enabled : true}}
       pagination={{clickable : true, renderBullet}}
       scrollbar={{ draggable: true }}
@@ -23,7 +23,7 @@ export default function ImageSlider ({imageURLs}){
    
       {imageURLs.map( imageURL=>(
         <SwiperSlide>
-          <img src={imageURL} className='w-[350px] h-[450px] m-auto'/>
+          <img src={imageURL} className='w-96 h-[35rem] m-auto'/>
         </SwiperSlide>
       ))}
     </Swiper>
