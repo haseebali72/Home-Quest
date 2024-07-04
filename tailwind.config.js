@@ -17,6 +17,15 @@ export default {
         "translate" : "translate"
 
       },
+      backgroundColor:{
+        "2e9132" : "#2e9132"
+      },
+      width : {
+        "86" : "23rem"
+      },
+      fontFamily : {
+        "sans" : ['Helvetica', 'Arial', 'sans-serif'],
+      }
       
     },
   },
