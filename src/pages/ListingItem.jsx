@@ -5,6 +5,7 @@ import { MdLocationOn } from "react-icons/md";
 import {FaTrash} from "react-icons/fa"
 import { MdEdit } from 'react-icons/md';
 import { priceConverter } from '../utils/priceConverter';
+import { auth } from '../firebase/firebase';
 
 const ListingItem = ({ listing, id, onDelete, onEdit }) => {
   const timestamp = new Date(listing.timestamp.seconds * 1000);
