@@ -60,7 +60,7 @@ const Profile = () => {
     toast.success("Signed Out")
   }
 
-  // This fucntion handles the cancel button when changing name
+  // Ya function profile name edit krta ha
   const onResetEditHandler=()=>{
       setIsDisabled(true)
   }
@@ -85,7 +85,7 @@ const Profile = () => {
       // console.log(listings)
       setListings(listings)
       setListLoading(false)
-      console.log(listings)
+      // console.log(listings)
     }
     fetchUserListings()
   }, [])
