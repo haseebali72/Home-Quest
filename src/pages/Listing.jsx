@@ -27,7 +27,7 @@ const Listing = () => {
     const params = useParams()
     const [listing, setListing] = useState(null)
     const [loading, setLoading] = useState(true)
-    
+
     useEffect(() => {
         async function fetchList() {
             console.log(params.listingId)
@@ -43,7 +43,7 @@ const Listing = () => {
         fetchList();
     }, [])
 
-    console.log(listing)
+    // console.log(listing)
 
     return (
         <>
@@ -85,11 +85,19 @@ const Listing = () => {
                             <div className='flex'>
                                 {/* Slider */}
                                 <div className='w-[48rem]  ml-4'>
-                                    <ImageSlider imageURLs={listing.imageURLs} />
+                                    <ImageSlider
+                                        imageURLs={listing.imageURLs}
+                                        spaceBetween={2}
+                                        slidePerView={1}
+                                        navigation={true}
+                                        pagination={true}
+                                        scrollbar={true}
+                                        imageStyle={{width : "24rem", height : "35rem", margin : "auto"}}
+                                    />
                                 </div>
-                                
+
                                 {/* Contact Div */}
-                                <div className=' w-96 ml-4 rounded-lg shadow-2xl h-[35rem]'>
+                                <div className=' w-96 ml-32 rounded-lg shadow-2xl h-[35rem]'>
                                     <h1 className='text-2xl m-4'>{listing.currency} {priceConverter(listing.price)}</h1>
 
                                     <div className='w-full'>
@@ -131,7 +139,7 @@ const Listing = () => {
 
                             </div>
                             <section className=''>
-                            <hr className='w-[54rem] mx-4'></hr>
+                                <hr className='w-[54rem] mx-4'></hr>
 
                                 {/* Icons Div */}
                                 <div className='m-2 flex'>
@@ -158,9 +166,9 @@ const Listing = () => {
                                     <div className='flex flex-row bg-slate-50 h-14 mb-3 '>
                                         <h1 className='m-3 text-2xl text-slate-700 font-bold '>Overview</h1>
                                     </div>
-                                    
-                                     <hr className='w-[54rem] mx-4'></hr>
-                                    
+
+                                    <hr className='w-[54rem] mx-4'></hr>
+
                                     <div className='flex flex-col'>
                                         <h3 className='m-4 font-semibold text-slate-700'>Detailed</h3>
                                         <ul className='columns-2' >
