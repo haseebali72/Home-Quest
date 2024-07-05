@@ -49,7 +49,7 @@ const EditListing = () => {
         data.userRef = auth.currentUser.uid
         delete data.images
 
-        console.log(data)
+        // console.log(data)
         
         const listingDoc = await updateListing(data, params.listingId)
         if(listingDoc.docUpdated){
