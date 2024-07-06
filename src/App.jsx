@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router'
 import Header from './Components/Header'
 import PrivateRoute from './Components/PrivateRoute'
 import {ColorCircleLoaderFull} from './Components/Loader'
+import Category from './pages/Category'
 
 const Home = lazy(() => import('./pages/Home'))
 const Profile = lazy(() => import('./pages/Profile'))
@@ -35,7 +36,8 @@ const App = () => {
           <Route path='/sign-up' element={<Signup />} />
           <Route path='/forgot-password' element={<ForgotPassword />} />
           <Route path='/offers' element={<Offers />} />
-          <Route path='/category/:x/:listingId' element={<Listing />} />
+          <Route path='/category/:categoryName' element={<Category />} />
+          <Route path='/category/:categoryName/:listingId' element={<Listing />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </Suspense>
